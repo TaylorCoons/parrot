@@ -1,0 +1,219 @@
+openapi: 3.0.0
+info:
+  description: "A CRUD api to store minecraft coordinates with metadata"
+  version: "1.0.0"
+  title: "TODO: Fill me in"
+  contact:
+    email: "TaylorCoons8798@gmail.com"
+  license:
+    name: "MIT"
+    url: "https://www.mit.edu/~amini/LICENSE.md"
+paths:
+  /server:
+    get:
+      summary: "Lists all server namespaces"
+      description: "List all registered server namespaces"
+      responses:
+        "200":
+          description: "Server list"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServerNamespace'
+    post:
+      summary: "Create server namespace"
+      description: "Creates a new server namespace"
+      requestBody:
+            description: "Server namespace to create"
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ServerNamespace'
+      responses:
+        "200":
+          description: "Server namespace created"
+        "409":
+          description: "Server namespace name already exists"
+  /server/{namespace}:
+    parameters:
+      - $ref: "#/components/parameters/namespace"
+    delete:
+      summary: "Delete a server namespace"
+      description: "Deletes a server namespace with all the of data associated with it"
+      responses:
+        "200":
+          description: "Server namepace deleted"
+        "404":
+          description: "Server namespace doesn't exist"
+  /server/{namespace}/coord:
+    parameters:
+      - $ref: "#/components/parameters/namespace"
+      - $ref: "#/components/parameters/coordId"
+    get:
+      summary: "List coords"
+      description: "List coords for a server namespace"
+      responses:
+        "200":
+          description: "Coords list"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CoordExist'
+    post:
+      summary: "Create coord"
+      description: "Create a coordinate for a namespace"
+      requestBody:
+        description: "Coord to create"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CoordNew'
+      responses:
+        "200":
+          description: "Created coord"
+          content:
+            application/json:
+              schema:
+                type: string
+  /server/{namespace}/coord/{coordId}:
+    parameters:
+      - $ref: "#/components/parameters/namespace"
+      - $ref: "#/components/parameters/coordId"
+    get:
+      summary: "Coord"
+      description: "Returns a coord by id"
+      responses:
+        "200":
+          description: "Get Coord"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoordExist'
+        "404":
+          description: "Coord doesn't exist"
+    put:
+      summary: "Update coord"
+      description: "Update a coordinate value"
+      responses:
+        "200":
+          description: "Updated Coord"
+        "404":
+          description: "Coord doesn't exist"
+    delete:
+      summary: "Delete a coord"
+      description: "Delete a coord by id"
+      responses:
+        "200":
+          description: "Coord deleted"
+        "404":
+          description: "Coord doesn't exist"
+    
+      
+      
+      
+components:
+  parameters:
+    namespace:
+        name: "namespace"
+        in: "path"
+        description: "Server namespace"
+        required: true
+        schema:
+          type: string
+    coordId:
+      name: "coordId"
+      in: "path"
+      description: "Coord Id"
+      required: true
+      schema:
+        type: string
+  schemas:
+    ServerNamespace:
+      type: string
+      example:
+        "MyServer"
+    CoordNew:
+      $ref: '#/components/schemas/Coord'
+    CoordExist:
+      allOf:
+        - $ref: '#/components/schemas/Coord'
+        - type: object
+          properties:
+            id:
+              type: string
+            created:
+              type: integer
+            updated:
+              type: integer
+          
+    Coord:
+      type: object
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+        z:
+          type: number
+        realm:
+          type: string
+          enum: [ "overworld", "nether", "end"]
+        structure:
+          type: string
+          enum: [
+            "mineshaft",
+            "stronghold",
+            "dungeon",
+            "desert well",
+            "fossil",
+            "village",
+            "desert temple",
+            "jungle temple",
+            "witch hut",
+            "ocean monument",
+            "igloo",
+            "woodland mansion",
+            "nether fortress",
+            "bastion remnant",
+            "ruined portal",
+            "obsidian pillar",
+            "end fountain",
+            "end gateway portal",
+            "end city",
+            "end ship"
+          ]
+        biome:
+          type: string
+          enum: [
+            "plains",
+            "forest",
+            "jungle",
+            "mountains",
+            "desert",
+            "taiga",
+            "snowy tundra",
+            "ice spikes",
+            "swamp",
+            "savannah",
+            "badlands",
+            "beach",
+            "stone shore",
+            "river",
+            "ocean",
+            "mushroom island",
+            "basalt delta",
+            "crimpson forest",
+            "nether wastes",
+            "soul sand valley",
+            "warped forest"
+          ]
+        description:
+          type: string
+        
+      
