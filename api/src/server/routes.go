@@ -44,3 +44,18 @@ func compileRoute(route Route) CompiledRoute {
 	pathMatcher := regexp.MustCompile(path)
 	return CompiledRoute{Method: route.Method, PathMatcher: pathMatcher, Handler: route.Handler}
 }
+
+func routeMatches(r CompiledRoute, u string) (bool, PathParams) {
+	res := r.PathMatcher.FindStringSubmatch(u)
+	var match bool = false
+	pathParams := make(map[string]string)
+	if len(res) > 0 {
+		match = true
+		pathNames := r.PathMatcher.SubexpNames()[1:]
+		pathValues := res[1:]
+		for i := range pathNames {
+			pathParams[pathNames[i]] = pathValues[i]
+		}
+	}
+	return match, pathParams
+}

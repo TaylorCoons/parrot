@@ -10,5 +10,6 @@ type Server struct {
 }
 
 func (Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
 	fmt.Println("I'm called")
 }
