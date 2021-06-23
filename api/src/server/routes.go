@@ -2,14 +2,13 @@ package server
 
 import (
 	"net/http"
-	"net/url"
 	"regexp"
 	"strings"
 )
 
 type PathParams map[string]string
 
-type HandlerFunc func(w http.ResponseWriter, r *http.Request, u url.URL, p PathParams)
+type HandlerFunc func(w http.ResponseWriter, r *http.Request, p PathParams)
 
 type Route struct {
 	Method  string
