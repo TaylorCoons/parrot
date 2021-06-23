@@ -14,6 +14,7 @@ func main() {
 	var routes = []server.Route{
 		{Method: "GET", Path: "path", Handler: handler},
 	}
-	server := server.Server{Routes: routes}
+	compiledRoutes := server.CompileRoutes(routes)
+	server := server.Server{CompiledRoutes: compiledRoutes}
 	http.ListenAndServe(":8080", server)
 }

@@ -1,0 +1,46 @@
+package server
+
+import (
+	"net/http"
+	"net/url"
+	"regexp"
+	"strings"
+)
+
+type PathParams map[string]string
+
+type HandlerFunc func(w http.ResponseWriter, r *http.Request, u url.URL, p PathParams)
+
+type Route struct {
+	Method  string
+	Path    string
+	Handler HandlerFunc
+}
+
+type CompiledRoute struct {
+	Method      string
+	PathMatcher *regexp.Regexp
+	Handler     HandlerFunc
+}
+
+func CompileRoutes(routes []Route) []CompiledRoute {
+	compiledRoutes := make([]CompiledRoute, len(routes))
+	for i, route := range routes {
+		compiledRoutes[i] = compileRoute(route)
+	}
+	return compiledRoutes
+}
+
+func compileRoute(route Route) CompiledRoute {
+	re := regexp.MustCompile(":[^/]*")
+	components := strings.Split(route.Path, "/")
+	for i, component := range components {
+		match := re.FindString(component)
+		if match != "" {
+			components[i] = "(?P<" + match[1:] + ">[^/]*)"
+		}
+	}
+	path := "^" + strings.Join(components, "/") + "$"
+	pathMatcher := regexp.MustCompile(path)
+	return CompiledRoute{Method: route.Method, PathMatcher: pathMatcher, Handler: route.Handler}
+}
