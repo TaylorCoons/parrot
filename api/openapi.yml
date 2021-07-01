@@ -9,52 +9,51 @@ info:
     name: "MIT"
     url: "https://www.mit.edu/~amini/LICENSE.md"
 paths:
-  /server:
+  /world:
     get:
-      summary: "Lists all server namespaces"
-      description: "List all registered server namespaces"
+      summary: "Lists all world namespaces"
+      description: "List all registered world namespaces"
       responses:
         "200":
-          description: "Server list"
+          description: "world list"
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ServerNamespace'
+                  $ref: '#/components/schemas/WorldNamespace'
     post:
-      summary: "Create server namespace"
-      description: "Creates a new server namespace"
+      summary: "Create world namespace"
+      description: "Creates a new world namespace"
       requestBody:
-            description: "Server namespace to create"
+            description: "World namespace to create"
             required: true
             content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/ServerNamespace'
+                  $ref: '#/components/schemas/WorldNamespace'
       responses:
         "200":
-          description: "Server namespace created"
+          description: "World namespace created"
         "409":
-          description: "Server namespace name already exists"
-  /server/{namespace}:
+          description: "World namespace name already exists"
+  /world/{world}:
     parameters:
-      - $ref: "#/components/parameters/namespace"
+      - $ref: "#/components/parameters/world"
     delete:
-      summary: "Delete a server namespace"
-      description: "Deletes a server namespace with all the of data associated with it"
+      summary: "Delete a world namespace"
+      description: "Deletes a world namespace with all the of data associated with it"
       responses:
         "200":
-          description: "Server namepace deleted"
+          description: "World namepace deleted"
         "404":
-          description: "Server namespace doesn't exist"
-  /server/{namespace}/coord:
+          description: "World namespace doesn't exist"
+  /world/{world}/coord:
     parameters:
-      - $ref: "#/components/parameters/namespace"
-      - $ref: "#/components/parameters/coordId"
+      - $ref: "#/components/parameters/world"
     get:
       summary: "List coords"
-      description: "List coords for a server namespace"
+      description: "List coords for a world namespace"
       responses:
         "200":
           description: "Coords list"
@@ -81,9 +80,9 @@ paths:
             application/json:
               schema:
                 type: string
-  /server/{namespace}/coord/{coordId}:
+  /world/{world}/coord/{coordId}:
     parameters:
-      - $ref: "#/components/parameters/namespace"
+      - $ref: "#/components/parameters/world"
       - $ref: "#/components/parameters/coordId"
     get:
       summary: "Coord"
@@ -119,10 +118,10 @@ paths:
       
 components:
   parameters:
-    namespace:
-        name: "namespace"
+    world:
+        name: "world"
         in: "path"
-        description: "Server namespace"
+        description: "World namespace"
         required: true
         schema:
           type: string
@@ -134,10 +133,10 @@ components:
       schema:
         type: string
   schemas:
-    ServerNamespace:
+    WorldNamespace:
       type: string
       example:
-        "MyServer"
+        "MyWorld"
     CoordNew:
       $ref: '#/components/schemas/Coord'
     CoordExist:
