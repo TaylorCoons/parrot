@@ -5,8 +5,11 @@ import (
 	"strings"
 )
 
+type MiddlewareFunc func(w http.ResponseWriter, r *http.Request, p PathParams, h HandlerFunc)
+
 type Server struct {
 	CompiledRoutes []CompiledRoute
+	Middleware     MiddlewareFunc
 }
 
 func (s Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -20,7 +23,11 @@ func (s Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				allowedMethods = append(allowedMethods, route.Method)
 				continue
 			}
-			route.Handler(w, r, paramMap)
+			if s.Middleware != nil {
+				s.Middleware(w, r, paramMap, route.Handler)
+			} else {
+				route.Handler(w, r, paramMap)
+			}
 			return
 		}
 	}

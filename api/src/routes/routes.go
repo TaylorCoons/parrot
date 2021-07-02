@@ -1,15 +1,17 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
+	"parrot/api/src/connector"
+	"parrot/api/src/sdk"
 	"parrot/api/src/server"
 )
 
-func pongHandler(w http.ResponseWriter, r *http.Request, p server.PathParams) {
-	fmt.Fprint(w, "pong\n")
+var Routes []server.Route = []server.Route{
+	{Method: "POST", Path: "/world", Handler: CreateWorldHandler},
 }
 
-var Routes []server.Route = []server.Route{
-	{Method: "GET", Path: "/ping", Handler: pongHandler},
+func CreateWorldHandler(w http.ResponseWriter, r *http.Request, p server.PathParams) {
+	c := connector.GetConnector()
+	sdk.CreateWorld(c, "MyWorld")
 }
