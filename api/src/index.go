@@ -9,5 +9,9 @@ import (
 func main() {
 	compiledRoutes := server.CompileRoutes(routes.Routes)
 	server := server.Server{CompiledRoutes: compiledRoutes}
-	http.ListenAndServe(":8080", server)
+	err := http.ListenAndServe(":8080", server)
+	if err != nil {
+		panic(err)
+	}
+
 }
