@@ -43,7 +43,7 @@ func TestCreateWorld_BadTable(t *testing.T) {
 
 func TestGetWorlds(t *testing.T) {
 	c := connector.New(getFsPath("World"))
-	// defer os.RemoveAll(getFsPath("World"))
+	defer os.RemoveAll(getFsPath("World"))
 	err := CreateWorld(c, "World_1")
 	if err != nil {
 		t.Error("Failed to create world")
@@ -64,5 +64,26 @@ func TestGetWorlds(t *testing.T) {
 	}
 	if worlds[1] != "World_2" {
 		t.Error("Second returned world does not match")
+	}
+}
+
+func TestDeleteWorld(t *testing.T) {
+	c := connector.New(getFsPath("World"))
+	defer os.RemoveAll(getFsPath("World"))
+	err := CreateWorld(c, "World_1")
+	if err != nil {
+		t.Error("Create world failed")
+	}
+	worlds, err := GetWorlds(c)
+	if err != nil || len(worlds) != 1 {
+		t.Error("Get worlds failed")
+	}
+	err = DeleteWorld(c, "World_1")
+	if err != nil {
+		t.Error("Delete world failed")
+	}
+	worlds, err = GetWorlds(c)
+	if err != nil || len(worlds) != 0 {
+		t.Error("Delete world returned success but did not remove record")
 	}
 }

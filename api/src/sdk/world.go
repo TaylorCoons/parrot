@@ -37,3 +37,24 @@ func GetWorlds(c *hare.Database) ([]string, error) {
 	}
 	return worlds, nil
 }
+
+func DeleteWorld(c *hare.Database, name string) error {
+	ids, err := c.IDs(table)
+	if err != nil {
+		return err
+	}
+	for _, id := range ids {
+		r := WorldRecord{}
+		err = c.Find(table, id, &r)
+		if err != nil {
+			return err
+		}
+		if r.Name == name {
+			err := c.Delete(table, id)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
