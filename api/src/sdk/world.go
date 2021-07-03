@@ -1,16 +1,22 @@
 package sdk
 
 import (
-	"fmt"
-
 	"github.com/jameycribbs/hare"
 )
 
 type World struct {
-	ID   int    `json:"id"`
 	Name string `json:"name"`
 }
 
-func CreateWorld(c *hare.Database, name string) {
-	fmt.Println("Creating wrold")
+const (
+	table = "World"
+)
+
+func CreateWorld(c *hare.Database, name string) error {
+	r := WorldRecord{Name: name}
+	_, err := c.Insert(table, &r)
+	if err != nil {
+		return err
+	}
+	return nil
 }

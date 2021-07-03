@@ -11,12 +11,12 @@ func getFsPath() string {
 	if err != nil {
 		panic("Failed to stat root path")
 	}
-	return filepath.Join(dir, "./filestore")
+	return filepath.Join(dir, "./connector_test_filestore")
 }
 
 func TestNew(t *testing.T) {
 	fsPath := getFsPath()
-	c := New()
+	c := New(getFsPath())
 	if c == nil {
 		t.Error("Nil connector returned")
 	}
@@ -29,7 +29,7 @@ func TestNew(t *testing.T) {
 
 func TestSetGetConnector(t *testing.T) {
 	fsPath := getFsPath()
-	c := New()
+	c := New(getFsPath())
 	defer os.Remove(fsPath)
 	SetConnector(c)
 	if c != GetConnector() {
