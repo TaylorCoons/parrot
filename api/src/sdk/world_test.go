@@ -40,3 +40,29 @@ func TestCreateWorld_BadTable(t *testing.T) {
 		t.Error("CreateWorld did not return error")
 	}
 }
+
+func TestGetWorlds(t *testing.T) {
+	c := connector.New(getFsPath("World"))
+	// defer os.RemoveAll(getFsPath("World"))
+	err := CreateWorld(c, "World_1")
+	if err != nil {
+		t.Error("Failed to create world")
+	}
+	err = CreateWorld(c, "World_2")
+	if err != nil {
+		t.Error("Failed to create world")
+	}
+	worlds, err := GetWorlds(c)
+	if err != nil {
+		t.Error("Failed to create worlds")
+	}
+	if len(worlds) != 2 {
+		t.Error("Returned worlds does not match")
+	}
+	if worlds[0] != "World_1" {
+		t.Error("First returned world does not match")
+	}
+	if worlds[1] != "World_2" {
+		t.Error("Second returned world does not match")
+	}
+}

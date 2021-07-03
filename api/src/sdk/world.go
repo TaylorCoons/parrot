@@ -20,3 +20,20 @@ func CreateWorld(c *hare.Database, name string) error {
 	}
 	return nil
 }
+
+func GetWorlds(c *hare.Database) ([]string, error) {
+	ids, err := c.IDs(table)
+	if err != nil {
+		return nil, err
+	}
+	worlds := make([]string, len(ids))
+	for i, id := range ids {
+		r := WorldRecord{}
+		err = c.Find(table, id, &r)
+		if err != nil {
+			return nil, err
+		}
+		worlds[i] = r.Name
+	}
+	return worlds, nil
+}
