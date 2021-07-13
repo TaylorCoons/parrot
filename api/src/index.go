@@ -18,6 +18,7 @@ func main() {
 	compiledRoutes := server.CompileRoutes(routes.Routes)
 	server := server.Server{CompiledRoutes: compiledRoutes}
 	c := connector.New(fsPath)
+	defer c.Close()
 	connector.SetConnector(c)
 	err = http.ListenAndServe(":8080", server)
 	if err != nil {

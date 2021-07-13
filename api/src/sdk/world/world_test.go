@@ -22,8 +22,21 @@ func getFsPath(table string) string {
 	return basePath
 }
 
+func TestCreateTableIfNotExists(t *testing.T) {
+	c := connector.New("./test_filestore")
+	defer c.Close()
+	if c.TableExists(table) {
+		t.Error("Table exists before test started")
+	}
+	createTableIfNotExists(c)
+	if !c.TableExists(table) {
+		t.Error("Table was not created")
+	}
+}
+
 func TestCreateWorld(t *testing.T) {
 	c := connector.New(getFsPath("World"))
+	defer c.Close()
 	defer os.RemoveAll(getFsPath("World"))
 	err := CreateWorld(c, "TestWorld")
 	if err != nil {
@@ -32,17 +45,9 @@ func TestCreateWorld(t *testing.T) {
 	}
 }
 
-func TestCreateWorld_BadTable(t *testing.T) {
-	c := connector.New(getFsPath("BadTable"))
-	defer os.RemoveAll(getFsPath("BadTable"))
-	err := CreateWorld(c, "TestWorld")
-	if err == nil {
-		t.Error("CreateWorld did not return error")
-	}
-}
-
 func TestGetWorlds(t *testing.T) {
 	c := connector.New(getFsPath("World"))
+	defer c.Close()
 	defer os.RemoveAll(getFsPath("World"))
 	err := CreateWorld(c, "World_1")
 	if err != nil {
@@ -69,6 +74,7 @@ func TestGetWorlds(t *testing.T) {
 
 func TestDeleteWorld(t *testing.T) {
 	c := connector.New(getFsPath("World"))
+	defer c.Close()
 	defer os.RemoveAll(getFsPath("World"))
 	err := CreateWorld(c, "World_1")
 	if err != nil {
