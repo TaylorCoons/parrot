@@ -1,4 +1,4 @@
-package sdk
+package world
 
 import (
 	"github.com/jameycribbs/hare"
@@ -12,9 +12,20 @@ const (
 	table = "World"
 )
 
+func createTableIfNotExists(c *hare.Database) error {
+	if !c.TableExists(table) {
+		return c.CreateTable(table)
+	}
+	return nil
+}
+
 func CreateWorld(c *hare.Database, name string) error {
+	err := createTableIfNotExists(c)
+	if err != nil {
+		return err
+	}
 	r := WorldRecord{Name: name}
-	_, err := c.Insert(table, &r)
+	_, err = c.Insert(table, &r)
 	if err != nil {
 		return err
 	}
@@ -22,6 +33,10 @@ func CreateWorld(c *hare.Database, name string) error {
 }
 
 func GetWorlds(c *hare.Database) ([]string, error) {
+	err := createTableIfNotExists(c)
+	if err != nil {
+		return nil, err
+	}
 	ids, err := c.IDs(table)
 	if err != nil {
 		return nil, err
@@ -39,6 +54,10 @@ func GetWorlds(c *hare.Database) ([]string, error) {
 }
 
 func DeleteWorld(c *hare.Database, name string) error {
+	err := createTableIfNotExists(c)
+	if err != nil {
+		return err
+	}
 	ids, err := c.IDs(table)
 	if err != nil {
 		return err

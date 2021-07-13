@@ -1,4 +1,4 @@
-package sdk
+package world
 
 import (
 	"fmt"
