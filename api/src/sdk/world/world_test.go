@@ -45,6 +45,35 @@ func TestCreateWorld(t *testing.T) {
 	}
 }
 
+func TestCreateWorld_NoDuplicates(t *testing.T) {
+	c := connector.New(getFsPath("World"))
+	defer c.Close()
+	defer os.RemoveAll(getFsPath("World"))
+	err := CreateWorld(c, "TestWorld")
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to create world")
+	}
+	err = CreateWorld(c, "TestWorld")
+	if dwe, ok := err.(*DuplicateWorldError); ok {
+		expected := &DuplicateWorldError{"TestWorld"}
+		if dwe.Error() != expected.Error() {
+			t.Error("Create world did not throw correct duplicate error")
+		}
+	} else {
+		t.Error("Create world did not throw a DuplicateWorldError")
+	}
+}
+
+func sContains(s []string, m string) bool {
+	for _, v := range s {
+		if v == m {
+			return true
+		}
+	}
+	return false
+}
+
 func TestGetWorlds(t *testing.T) {
 	c := connector.New(getFsPath("World"))
 	defer c.Close()
@@ -64,10 +93,10 @@ func TestGetWorlds(t *testing.T) {
 	if len(worlds) != 2 {
 		t.Error("Returned worlds does not match")
 	}
-	if worlds[0] != "World_1" {
+	if !sContains(worlds, "World_1") {
 		t.Error("First returned world does not match")
 	}
-	if worlds[1] != "World_2" {
+	if !sContains(worlds, "World_2") {
 		t.Error("Second returned world does not match")
 	}
 }

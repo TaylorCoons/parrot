@@ -1,6 +1,8 @@
 package world
 
 import (
+	"fmt"
+
 	"github.com/jameycribbs/hare"
 )
 
@@ -11,6 +13,14 @@ type World struct {
 const (
 	table = "World"
 )
+
+type DuplicateWorldError struct {
+	Duplicate string
+}
+
+func (dwe *DuplicateWorldError) Error() string {
+	return fmt.Sprintf("World: %s already exists", dwe.Duplicate)
+}
 
 func createTableIfNotExists(c *hare.Database) error {
 	if !c.TableExists(table) {
@@ -25,6 +35,15 @@ func CreateWorld(c *hare.Database, name string) error {
 		return err
 	}
 	r := WorldRecord{Name: name}
+	worlds, err := GetWorlds(c)
+	if err != nil {
+		return err
+	}
+	for _, n := range worlds {
+		if n == name {
+			return &DuplicateWorldError{name}
+		}
+	}
 	_, err = c.Insert(table, &r)
 	if err != nil {
 		return err
