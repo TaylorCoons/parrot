@@ -18,7 +18,12 @@ func CreateWorldHandler(w http.ResponseWriter, r *http.Request, p server.PathPar
 	c := connector.GetConnector()
 	err := world.CreateWorld(c, "MyWorld")
 	if err != nil {
+		if _, ok := err.(*world.DuplicateWorldError); ok {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }
 
@@ -27,6 +32,7 @@ func GetWorldsHandler(w http.ResponseWriter, r *http.Request, p server.PathParam
 	worlds, err := world.GetWorlds(c)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	json.NewEncoder(w).Encode(worlds)
 }
@@ -36,5 +42,6 @@ func DeleteWorldHandler(w http.ResponseWriter, r *http.Request, p server.PathPar
 	err := world.DeleteWorld(c, p["world"])
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }
