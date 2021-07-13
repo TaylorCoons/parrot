@@ -4,7 +4,6 @@ import (
 	"github.com/jameycribbs/hare"
 )
 
-// Comment is a record for a MST3K episode comment.
 type WorldRecord struct {
 	// Required field!!!
 	ID   int    `json:"id"`

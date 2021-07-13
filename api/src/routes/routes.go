@@ -3,7 +3,7 @@ package routes
 import (
 	"net/http"
 	"parrot/api/src/connector"
-	"parrot/api/src/sdk"
+	sdk "parrot/api/src/sdk/world"
 	"parrot/api/src/server"
 )
 
