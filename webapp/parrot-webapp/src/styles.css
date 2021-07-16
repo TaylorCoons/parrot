@@ -1,5 +1,12 @@
-html { background-color: black; }
-    span.title {
-         font-size: 50px;
-    }
+  html {
+    background-color: black;
+  }
 
+  @font-face {
+    font-family: 'PressStart2P';
+    src: url(/assets/PressStart2P-Regular.ttf) format("truetype");
+    font-weight:300;
+  }
+  span.title {
+       font-size: 35px;
+  }
