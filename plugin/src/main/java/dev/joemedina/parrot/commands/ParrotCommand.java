@@ -31,7 +31,6 @@ public class ParrotCommand implements CommandExecutor {
 
     private void HelpCommand(Player player)
     {
-
     }
 
     private void ParrotCommand(Player player, String[] args)

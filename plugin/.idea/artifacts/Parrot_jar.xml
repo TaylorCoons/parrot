@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Parrot:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Parrot_jar</output-path>
+    <root id="archive" name="Parrot.jar">
+      <element id="module-output" name="Parrot" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/plugin.yml" />
+    </root>
+  </artifact>
+</component>

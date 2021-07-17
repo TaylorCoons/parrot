@@ -1,0 +1,8 @@
+name: Parrot
+version: 0.0.1
+author: Dpasi314
+main: dev.joemedina.parrot.Parrot
+api-version: 1.17
+commands:
+  parrot:
+    description: parrot command
