@@ -96,3 +96,10 @@ func DeleteWorld(c *hare.Database, name string) error {
 	}
 	return nil
 }
+
+func DeleteWorlds(c *hare.Database) error {
+	if c.TableExists(table) {
+		return c.DropTable(table)
+	}
+	return nil
+}

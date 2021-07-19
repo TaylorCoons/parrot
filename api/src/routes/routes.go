@@ -12,6 +12,7 @@ var Routes []server.Route = []server.Route{
 	{Method: "POST", Path: "/world", Handler: CreateWorldHandler},
 	{Method: "GET", Path: "/world", Handler: GetWorldsHandler},
 	{Method: "DELETE", Path: "/world/:world", Handler: DeleteWorldHandler},
+	{Method: "DELETE", Path: "/world", Handler: DeleteWorldsHandler},
 }
 
 func CreateWorldHandler(w http.ResponseWriter, r *http.Request, p server.PathParams) {
@@ -41,6 +42,15 @@ func GetWorldsHandler(w http.ResponseWriter, r *http.Request, p server.PathParam
 func DeleteWorldHandler(w http.ResponseWriter, r *http.Request, p server.PathParams) {
 	c := connector.GetConnector()
 	err := world.DeleteWorld(c, p["world"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func DeleteWorldsHandler(w http.ResponseWriter, r *http.Request, p server.PathParams) {
+	c := connector.GetConnector()
+	err := world.DeleteWorlds(c)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
