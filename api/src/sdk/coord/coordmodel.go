@@ -1,4 +1,4 @@
-package world
+package coord
 
 import (
 	"github.com/jameycribbs/hare"
@@ -36,42 +36,70 @@ const (
 	EndShip          StructureType = "end ship"
 )
 
-type WorldRecord struct {
-	// Required field!!!
-	ID        int           `json:"id"`
-	Created   int           `json:"created"`
-	Updated   int           `json:"updated"`
-	X         int           `json:"x"`
-	Y         int           `json:"y"`
-	Z         int           `json:"z"`
-	Realm     RealmType     `json:"realm"`
-	Structure StructureType `json:"StructureType"`
+type BiomeType string
+
+const (
+	Plains         BiomeType = "plains"
+	Forest         BiomeType = "forest"
+	Jungle         BiomeType = "jungle"
+	Mountains      BiomeType = "mountains"
+	Desert         BiomeType = "desert"
+	Taiga          BiomeType = "taiga"
+	SnowyTunda     BiomeType = "snowy tundra"
+	IceSpikes      BiomeType = "ice spikes"
+	Swamp          BiomeType = "swamp"
+	Savannah       BiomeType = "savannah"
+	Badlands       BiomeType = "badlands"
+	Beach          BiomeType = "beach"
+	StoneShore     BiomeType = "stone shore"
+	River          BiomeType = "river"
+	Ocean          BiomeType = "ocean"
+	MushroomIsland BiomeType = "mushroom island"
+	BasaltDelta    BiomeType = "basalt delta"
+	CrimpsonForest BiomeType = "crimpson forest"
+	NetherWastes   BiomeType = "nether wastes"
+	SoulSandValley BiomeType = "soul sand valley"
+	WarpedForest   BiomeType = "warped forest"
+)
+
+type CoordRecord struct {
+	ID          int           `json:"id"`
+	World       string        `json:"world"`
+	Created     int           `json:"created"`
+	Updated     int           `json:"updated"`
+	X           int           `json:"x"`
+	Y           int           `json:"y"`
+	Z           int           `json:"z"`
+	Realm       RealmType     `json:"realm"`
+	Structure   StructureType `json:"structure"`
+	Biome       BiomeType     `json:"biome"`
+	Description string        `json:"description"`
 }
 
 // GetID returns the record id.
 // This method is used internally by Hare.
 // You need to add this method to each one of
 // your models.
-func (w *WorldRecord) GetID() int {
-	return w.ID
+func (c *CoordRecord) GetID() int {
+	return c.ID
 }
 
 // SetID takes an id. This method is used
 // internally by Hare.
 // You need to add this method to each one of
 // your models.
-func (w *WorldRecord) SetID(id int) {
-	w.ID = id
+func (c *CoordRecord) SetID(id int) {
+	c.ID = id
 }
 
 // AfterFind is a callback that is run by Hare after
 // a record is found.
 // You need to add this method to each one of your
 // models.
-func (w *WorldRecord) AfterFind(db *hare.Database) error {
+func (c *CoordRecord) AfterFind(db *hare.Database) error {
 	// IMPORTANT!!!  These two lines of code are necessary in your AfterFind
 	//               in order for the Find method to work correctly!
-	*w = WorldRecord(*w)
+	*c = CoordRecord(*c)
 
 	return nil
 }
