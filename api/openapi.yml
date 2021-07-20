@@ -37,6 +37,12 @@ paths:
           description: "World namespace created"
         "409":
           description: "World namespace name already exists"
+    delete:
+      summary: "Delete all world namespaces"
+      description: "Delete all world namespaces"
+      responses:
+        "200":
+          description: "World namespace created"
   /world/{world}:
     parameters:
       - $ref: "#/components/parameters/world"

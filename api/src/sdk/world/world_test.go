@@ -65,6 +65,27 @@ func TestCreateWorld_NoDuplicates(t *testing.T) {
 	}
 }
 
+func TestDeleteWorlds(t *testing.T) {
+	c := connector.New(getFsPath("World"))
+	defer c.Close()
+	defer os.RemoveAll(getFsPath("World"))
+	err := CreateWorld(c, "TestWorld1")
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to create world")
+	}
+	err = CreateWorld(c, "TestWorld2")
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to create second world")
+	}
+	err = DeleteWorlds(c)
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to delete worlds")
+	}
+}
+
 func sContains(s []string, m string) bool {
 	for _, v := range s {
 		if v == m {

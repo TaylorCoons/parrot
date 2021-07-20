@@ -10,6 +10,10 @@ import (
 )
 
 func main() {
+	startServer()
+}
+
+func startServer() {
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		panic("Failed to stat root path")
