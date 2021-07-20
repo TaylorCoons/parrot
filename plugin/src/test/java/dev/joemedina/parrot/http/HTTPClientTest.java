@@ -15,7 +15,7 @@ import java.net.URI;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.StringBody.exact;
 
-public class HTTPClientTests {
+public class HTTPClientTest {
 
     private ClientAndServer mockServer;
     private URI testUri;
