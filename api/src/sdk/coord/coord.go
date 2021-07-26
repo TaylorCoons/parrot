@@ -2,14 +2,15 @@ package coord
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/jameycribbs/hare"
 )
 
 type Coord struct {
 	ID          *int           `json:"id"`
-	Created     *int           `json:"created"`
-	Updated     *int           `json:"updated"`
+	Created     *int64         `json:"created"`
+	Updated     *int64         `json:"updated"`
 	X           int            `json:"x"`
 	Y           int            `json:"y"`
 	Z           int            `json:"z"`
@@ -45,6 +46,8 @@ func CreateCoord(c *hare.Database, world string, coord Coord) error {
 	}
 	r := CoordRecord{
 		World:       world,
+		Created:     time.Now().Unix(),
+		Updated:     time.Now().Unix(),
 		X:           coord.X,
 		Y:           coord.Y,
 		Z:           coord.Z,

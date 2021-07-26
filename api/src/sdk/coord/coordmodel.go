@@ -65,8 +65,8 @@ const (
 type CoordRecord struct {
 	ID          int            `json:"id"`
 	World       string         `json:"world"`
-	Created     int            `json:"created"`
-	Updated     int            `json:"updated"`
+	Created     int64          `json:"created"`
+	Updated     int64          `json:"updated"`
 	X           int            `json:"x"`
 	Y           int            `json:"y"`
 	Z           int            `json:"z"`
