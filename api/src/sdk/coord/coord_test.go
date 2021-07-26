@@ -8,14 +8,19 @@ import (
 	"testing"
 )
 
+var testRealm = Overworld
+var testStructure = DesertTemple
+var testBiome = Desert
+var testDescription = "Test Coordinate"
+
 var testCoord Coord = Coord{
 	X:           -1,
 	Y:           1,
 	Z:           4234193,
-	Realm:       Overworld,
-	Structure:   DesertTemple,
-	Biome:       Desert,
-	Description: "Test Coordinate",
+	Realm:       &testRealm,
+	Structure:   &testStructure,
+	Biome:       &testBiome,
+	Description: &testDescription,
 }
 
 func getFsPath(table string) string {
@@ -88,7 +93,7 @@ func TestGetCoord(t *testing.T) {
 		fmt.Println(err)
 		t.Error("Failed to get coords")
 	}
-	_, err = GetCoord(c, "TestWorld", coords[0].ID)
+	_, err = GetCoord(c, "TestWorld", *coords[0].ID)
 	if err != nil {
 		fmt.Println(err)
 		t.Error("Failed to get coord")

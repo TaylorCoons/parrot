@@ -7,16 +7,16 @@ import (
 )
 
 type Coord struct {
-	ID          int           `json:"id"`
-	Created     int           `json:"created"`
-	Updated     int           `json:"updated"`
-	X           int           `json:"x"`
-	Y           int           `json:"y"`
-	Z           int           `json:"z"`
-	Realm       RealmType     `json:"realm"`
-	Structure   StructureType `json:"structure"`
-	Biome       BiomeType     `json:"biome"`
-	Description string        `json:"description"`
+	ID          *int           `json:"id"`
+	Created     *int           `json:"created"`
+	Updated     *int           `json:"updated"`
+	X           int            `json:"x"`
+	Y           int            `json:"y"`
+	Z           int            `json:"z"`
+	Realm       *RealmType     `json:"realm"`
+	Structure   *StructureType `json:"structure"`
+	Biome       *BiomeType     `json:"biome"`
+	Description *string        `json:"description"`
 }
 
 const (
@@ -109,9 +109,9 @@ func GetCoord(c *hare.Database, world string, coordId int) (Coord, error) {
 
 func coordRecordToCoord(r CoordRecord) Coord {
 	return Coord{
-		ID:          r.ID,
-		Created:     r.Created,
-		Updated:     r.Updated,
+		ID:          &r.ID,
+		Created:     &r.Created,
+		Updated:     &r.Updated,
 		X:           r.X,
 		Y:           r.Y,
 		Z:           r.Z,

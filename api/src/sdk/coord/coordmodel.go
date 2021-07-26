@@ -63,17 +63,17 @@ const (
 )
 
 type CoordRecord struct {
-	ID          int           `json:"id"`
-	World       string        `json:"world"`
-	Created     int           `json:"created"`
-	Updated     int           `json:"updated"`
-	X           int           `json:"x"`
-	Y           int           `json:"y"`
-	Z           int           `json:"z"`
-	Realm       RealmType     `json:"realm"`
-	Structure   StructureType `json:"structure"`
-	Biome       BiomeType     `json:"biome"`
-	Description string        `json:"description"`
+	ID          int            `json:"id"`
+	World       string         `json:"world"`
+	Created     int            `json:"created"`
+	Updated     int            `json:"updated"`
+	X           int            `json:"x"`
+	Y           int            `json:"y"`
+	Z           int            `json:"z"`
+	Realm       *RealmType     `json:"realm"`
+	Structure   *StructureType `json:"structure"`
+	Biome       *BiomeType     `json:"biome"`
+	Description *string        `json:"description"`
 }
 
 // GetID returns the record id.

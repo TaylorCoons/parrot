@@ -22,6 +22,7 @@ var Routes []server.Route = []server.Route{
 
 func CreateWorldHandler(w http.ResponseWriter, r *http.Request, p server.PathParams) {
 	c := connector.GetConnector()
+	// TODO: Don't hardcode worldname
 	err := world.CreateWorld(c, "MyWorld")
 	if err != nil {
 		if _, ok := err.(*world.DuplicateWorldError); ok {
