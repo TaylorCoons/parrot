@@ -32,6 +32,31 @@ func (cnee *CoordNotExistError) Error() string {
 	return fmt.Sprintf("Coord: %d does not exist", cnee.CoordId)
 }
 
+type InvalidCoordError struct {
+	missingFields []string
+}
+
+func (ice *InvalidCoordError) Error() string {
+	return fmt.Sprintf("Coord is missing required fields: %v", ice.missingFields)
+}
+
+func validateCoord(coord Coord) error {
+	var fields []string
+	if coord.X == nil {
+		fields = append(fields, "x") // TODO: get field name using reflection
+	}
+	if coord.Y == nil {
+		fields = append(fields, "y") // TODO: get field name using reflection
+	}
+	if coord.Z == nil {
+		fields = append(fields, "z") // TODO: get field name using reflection
+	}
+	if len(fields) != 0 {
+		return &InvalidCoordError{fields}
+	}
+	return nil
+}
+
 func createTableIfNotExists(c *hare.Database) error {
 	if !c.TableExists(table) {
 		return c.CreateTable(table)
@@ -40,7 +65,11 @@ func createTableIfNotExists(c *hare.Database) error {
 }
 
 func CreateCoord(c *hare.Database, world string, coord Coord) error {
-	err := createTableIfNotExists(c)
+	err := validateCoord(coord)
+	if err != nil {
+		return err
+	}
+	err = createTableIfNotExists(c)
 	if err != nil {
 		return err
 	}

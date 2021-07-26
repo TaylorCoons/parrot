@@ -85,6 +85,10 @@ func CreateCoordHandler(w http.ResponseWriter, r *http.Request, p server.PathPar
 	}
 	err = coord.CreateCoord(c, p["world"], coordData)
 	if err != nil {
+		if _, ok := err.(*coord.InvalidCoordError); ok {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
