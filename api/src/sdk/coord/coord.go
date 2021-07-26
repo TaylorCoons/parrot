@@ -139,6 +139,55 @@ func GetCoord(c *hare.Database, world string, coordId int) (Coord, error) {
 	return Coord{}, &CoordNotExistError{coordId}
 }
 
+func UpdateCoord(c *hare.Database, world string, coordId int, coord Coord) error {
+	err := createTableIfNotExists(c)
+	if err != nil {
+		return err
+	}
+	ids, err := c.IDs(table)
+	if err != nil {
+		return err
+	}
+	for _, id := range ids {
+		if id == coordId {
+			r := CoordRecord{}
+			err = c.Find(table, id, &r)
+			if err != nil {
+				return err
+			}
+			r.Updated = time.Now().Unix()
+			if coord.X != nil {
+				r.X = *coord.X
+			}
+			if coord.Y != nil {
+				r.Y = *coord.Y
+			}
+			if coord.Z != nil {
+				r.Z = *coord.Z
+			}
+			if coord.Realm != nil {
+				r.Realm = coord.Realm
+			}
+			if coord.Structure != nil {
+				r.Structure = coord.Structure
+			}
+			if coord.Biome != nil {
+				r.Biome = coord.Biome
+			}
+			if coord.Description != nil {
+				r.Description = coord.Description
+			}
+			fmt.Println(r)
+			err = c.Update(table, &r)
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+	}
+	return &CoordNotExistError{coordId}
+}
+
 func coordRecordToCoord(r CoordRecord) Coord {
 	return Coord{
 		ID:          &r.ID,

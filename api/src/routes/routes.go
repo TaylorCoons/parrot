@@ -18,6 +18,7 @@ var Routes []server.Route = []server.Route{
 	{Method: "GET", Path: "/world/:world/coord", Handler: GetCoordsHandler},
 	{Method: "POST", Path: "/world/:world/coord", Handler: CreateCoordHandler},
 	{Method: "GET", Path: "/world/:world/coord/:coordId", Handler: GetCoordHandler},
+	{Method: "PUT", Path: "/world/:world/coord/:coordId", Handler: UpdateCoordHandler},
 }
 
 func CreateWorldHandler(w http.ResponseWriter, r *http.Request, p server.PathParams) {
@@ -112,4 +113,24 @@ func GetCoordHandler(w http.ResponseWriter, r *http.Request, p server.PathParams
 	}
 	// TODO: catch error for when encoding fails
 	json.NewEncoder(w).Encode(coordData)
+}
+
+func UpdateCoordHandler(w http.ResponseWriter, r *http.Request, p server.PathParams) {
+	c := connector.GetConnector()
+	coordId, err := strconv.Atoi(p["coordId"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	coordData := coord.Coord{}
+	err = json.NewDecoder(r.Body).Decode(&coordData)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	err = coord.UpdateCoord(c, p["world"], coordId, coordData)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

@@ -102,3 +102,34 @@ func TestGetCoord(t *testing.T) {
 		t.Error("Failed to get coord")
 	}
 }
+
+func TestUpdateCoord(t *testing.T) {
+	c := connector.New(getFsPath("Coord"))
+	defer c.Close()
+	defer os.RemoveAll(getFsPath("Coord"))
+	err := CreateCoord(c, "TestWorld", testCoord)
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to create coord")
+	}
+	coords, err := GetCoords(c, "TestWorld")
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to get coords")
+	}
+	updateDescription := "I have been updated"
+	coords[0].Description = &updateDescription
+	err = UpdateCoord(c, "TestWorld", *coords[0].ID, coords[0])
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to update coord")
+	}
+	coord, err := GetCoord(c, "TestWorld", *coords[0].ID)
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to get coord after update")
+	}
+	if *coord.Description != updateDescription {
+		t.Error("Updated description does not match")
+	}
+}
