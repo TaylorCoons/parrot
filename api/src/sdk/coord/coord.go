@@ -1,6 +1,8 @@
 package coord
 
 import (
+	"fmt"
+
 	"github.com/jameycribbs/hare"
 )
 
@@ -20,6 +22,14 @@ type Coord struct {
 const (
 	table = "Coord"
 )
+
+type CoordNotExistError struct {
+	CoordId int
+}
+
+func (cnee *CoordNotExistError) Error() string {
+	return fmt.Sprintf("Coord: %d does not exist", cnee.CoordId)
+}
 
 func createTableIfNotExists(c *hare.Database) error {
 	if !c.TableExists(table) {
@@ -69,51 +79,45 @@ func GetCoords(c *hare.Database, world string) ([]Coord, error) {
 		if r.World != world {
 			continue
 		}
-		coord := Coord{
-			ID:          r.ID,
-			Created:     r.Created,
-			Updated:     r.Updated,
-			X:           r.X,
-			Y:           r.Y,
-			Z:           r.Z,
-			Realm:       r.Realm,
-			Structure:   r.Structure,
-			Biome:       r.Biome,
-			Description: r.Description,
-		}
+		coord := coordRecordToCoord(r)
 		coords = append(coords, coord)
 	}
 	return coords, nil
 }
 
-// func DeleteWorld(c *hare.Database, name string) error {
-// 	err := createTableIfNotExists(c)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	ids, err := c.IDs(table)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	for _, id := range ids {
-// 		r := WorldRecord{}
-// 		err = c.Find(table, id, &r)
-// 		if err != nil {
-// 			return err
-// 		}
-// 		if r.Name == name {
-// 			err := c.Delete(table, id)
-// 			if err != nil {
-// 				return err
-// 			}
-// 		}
-// 	}
-// 	return nil
-// }
+func GetCoord(c *hare.Database, world string, coordId int) (Coord, error) {
+	err := createTableIfNotExists(c)
+	if err != nil {
+		return Coord{}, err
+	}
+	ids, err := c.IDs(table)
+	if err != nil {
+		return Coord{}, err
+	}
+	for _, id := range ids {
+		if id == coordId {
+			r := CoordRecord{}
+			err = c.Find(table, id, &r)
+			if err != nil {
+				return Coord{}, err
+			}
+			return coordRecordToCoord(r), nil
+		}
+	}
+	return Coord{}, &CoordNotExistError{coordId}
+}
 
-// func DeleteWorlds(c *hare.Database) error {
-// 	if c.TableExists(table) {
-// 		return c.DropTable(table)
-// 	}
-// 	return nil
-// }
+func coordRecordToCoord(r CoordRecord) Coord {
+	return Coord{
+		ID:          r.ID,
+		Created:     r.Created,
+		Updated:     r.Updated,
+		X:           r.X,
+		Y:           r.Y,
+		Z:           r.Z,
+		Realm:       r.Realm,
+		Structure:   r.Structure,
+		Biome:       r.Biome,
+		Description: r.Description,
+	}
+}

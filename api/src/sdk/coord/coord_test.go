@@ -1,4 +1,3 @@
-
 package coord
 
 import (
@@ -9,7 +8,7 @@ import (
 	"testing"
 )
 
-testCoord := Coord{
+var testCoord Coord = Coord{
 	X:           -1,
 	Y:           1,
 	Z:           4234193,
@@ -56,81 +55,42 @@ func TestCreateCoord(t *testing.T) {
 	}
 }
 
-func TestDeleteWorlds(t *testing.T) {
+func TestGetCoords(t *testing.T) {
 	c := connector.New(getFsPath("Coord"))
 	defer c.Close()
 	defer os.RemoveAll(getFsPath("Coord"))
 	err := CreateCoord(c, "TestWorld", testCoord)
 	if err != nil {
 		fmt.Println(err)
-		t.Error("Failed to create world")
+		t.Error("Failed to create coord")
 	}
-	err = CreateWorld(c, "TestWorld2")
+	coords, err := GetCoords(c, "TestWorld")
 	if err != nil {
 		fmt.Println(err)
-		t.Error("Failed to create second world")
+		t.Error("Failed to get coords")
 	}
-	err = DeleteWorlds(c)
+	if len(coords) != 1 {
+		t.Error("Length of coords does not match")
+	}
+}
+
+func TestGetCoord(t *testing.T) {
+	c := connector.New(getFsPath("Coord"))
+	defer c.Close()
+	defer os.RemoveAll(getFsPath("Coord"))
+	err := CreateCoord(c, "TestWorld", testCoord)
 	if err != nil {
 		fmt.Println(err)
-		t.Error("Failed to delete worlds")
+		t.Error("Failed to create coord")
 	}
-}
-
-func sContains(s []string, m string) bool {
-	for _, v := range s {
-		if v == m {
-			return true
-		}
-	}
-	return false
-}
-
-func TestGetWorlds(t *testing.T) {
-	c := connector.New(getFsPath("World"))
-	defer c.Close()
-	defer os.RemoveAll(getFsPath("World"))
-	err := CreateWorld(c, "World_1")
+	coords, err := GetCoords(c, "TestWorld")
 	if err != nil {
-		t.Error("Failed to create world")
+		fmt.Println(err)
+		t.Error("Failed to get coords")
 	}
-	err = CreateWorld(c, "World_2")
+	_, err = GetCoord(c, "TestWorld", coords[0].ID)
 	if err != nil {
-		t.Error("Failed to create world")
-	}
-	worlds, err := GetWorlds(c)
-	if err != nil {
-		t.Error("Failed to create worlds")
-	}
-	if len(worlds) != 2 {
-		t.Error("Returned worlds does not match")
-	}
-	if !sContains(worlds, "World_1") {
-		t.Error("First returned world does not match")
-	}
-	if !sContains(worlds, "World_2") {
-		t.Error("Second returned world does not match")
-	}
-}
-
-func TestDeleteWorld(t *testing.T) {
-	c := connector.New(getFsPath("World"))
-	defer c.Close()
-	defer os.RemoveAll(getFsPath("World"))
-	err := CreateWorld(c, "World_1")
-	if err != nil {
-		t.Error("Create world failed")
-	}
-	worlds, err := GetWorlds(c)
-	if err != nil || len(worlds) != 1 {
-		t.Error("Get worlds failed")
-	}
-	err = DeleteWorld(c, "World_1")
-	if err != nil {
-		t.Error("Delete world failed")
-	}
-	worlds, err = GetWorlds(c)
-	if err != nil || len(worlds) != 0 {
-		t.Error("Delete world returned success but did not remove record")
+		fmt.Println(err)
+		t.Error("Failed to get coord")
 	}
 }

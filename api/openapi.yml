@@ -151,7 +151,7 @@ components:
         - type: object
           properties:
             id:
-              type: string
+              type: integer
             created:
               type: integer
             updated:
