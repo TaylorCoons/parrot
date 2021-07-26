@@ -11,9 +11,9 @@ type Coord struct {
 	ID          *int           `json:"id"`
 	Created     *int64         `json:"created"`
 	Updated     *int64         `json:"updated"`
-	X           int            `json:"x"`
-	Y           int            `json:"y"`
-	Z           int            `json:"z"`
+	X           *int           `json:"x"`
+	Y           *int           `json:"y"`
+	Z           *int           `json:"z"`
 	Realm       *RealmType     `json:"realm"`
 	Structure   *StructureType `json:"structure"`
 	Biome       *BiomeType     `json:"biome"`
@@ -48,9 +48,9 @@ func CreateCoord(c *hare.Database, world string, coord Coord) error {
 		World:       world,
 		Created:     time.Now().Unix(),
 		Updated:     time.Now().Unix(),
-		X:           coord.X,
-		Y:           coord.Y,
-		Z:           coord.Z,
+		X:           *coord.X,
+		Y:           *coord.Y,
+		Z:           *coord.Z,
 		Realm:       coord.Realm,
 		Structure:   coord.Structure,
 		Biome:       coord.Biome,
@@ -115,9 +115,9 @@ func coordRecordToCoord(r CoordRecord) Coord {
 		ID:          &r.ID,
 		Created:     &r.Created,
 		Updated:     &r.Updated,
-		X:           r.X,
-		Y:           r.Y,
-		Z:           r.Z,
+		X:           &r.X,
+		Y:           &r.Y,
+		Z:           &r.Z,
 		Realm:       r.Realm,
 		Structure:   r.Structure,
 		Biome:       r.Biome,

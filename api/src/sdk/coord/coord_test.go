@@ -8,15 +8,18 @@ import (
 	"testing"
 )
 
+var testX = -1
+var testY = 1
+var testZ = 4234193
 var testRealm = Overworld
 var testStructure = DesertTemple
 var testBiome = Desert
 var testDescription = "Test Coordinate"
 
 var testCoord Coord = Coord{
-	X:           -1,
-	Y:           1,
-	Z:           4234193,
+	X:           &testX,
+	Y:           &testY,
+	Z:           &testZ,
 	Realm:       &testRealm,
 	Structure:   &testStructure,
 	Biome:       &testBiome,
