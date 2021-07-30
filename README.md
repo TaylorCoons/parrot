@@ -6,7 +6,10 @@
 
 Parrot attempts to allow users on a minecraft server to save interesting locations. The inspiration comes from finding unique landscapes scattered through the procedurally generated world. Originally I wrote down the locations of these coordinates on a sticky note and then shared them through chat to fellow server players. This application avoids the desk full of chicken scratch sticky notes.
 
-The application consists of three main services.
+The application consists of three main services: 
+[plugin](#plugin), 
+[webapp](#webapp), 
+and [api](#api)
 
 ## Services
 
