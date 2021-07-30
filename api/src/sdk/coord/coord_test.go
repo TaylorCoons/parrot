@@ -6,6 +6,8 @@ import (
 	"parrot/api/src/connector"
 	"path/filepath"
 	"testing"
+
+	"github.com/jameycribbs/hare"
 )
 
 var testX = -1
@@ -52,10 +54,7 @@ func TestCreateTableIfNotExists(t *testing.T) {
 	}
 }
 
-func TestCreateCoord(t *testing.T) {
-	c := connector.New(getFsPath("Coord"))
-	defer c.Close()
-	defer os.RemoveAll(getFsPath("Coord"))
+func createCoordHelper(t *testing.T, c *hare.Database, worldName string, coord Coord) {
 	err := CreateCoord(c, "TestWorld", testCoord)
 	if err != nil {
 		fmt.Println(err)
@@ -63,15 +62,18 @@ func TestCreateCoord(t *testing.T) {
 	}
 }
 
+func TestCreateCoord(t *testing.T) {
+	c := connector.New(getFsPath("Coord"))
+	defer c.Close()
+	defer os.RemoveAll(getFsPath("Coord"))
+	createCoordHelper(t, c, "TestWorld", testCoord)
+}
+
 func TestGetCoords(t *testing.T) {
 	c := connector.New(getFsPath("Coord"))
 	defer c.Close()
 	defer os.RemoveAll(getFsPath("Coord"))
-	err := CreateCoord(c, "TestWorld", testCoord)
-	if err != nil {
-		fmt.Println(err)
-		t.Error("Failed to create coord")
-	}
+	createCoordHelper(t, c, "TestWorld", testCoord)
 	coords, err := GetCoords(c, "TestWorld")
 	if err != nil {
 		fmt.Println(err)
@@ -86,11 +88,7 @@ func TestGetCoord(t *testing.T) {
 	c := connector.New(getFsPath("Coord"))
 	defer c.Close()
 	defer os.RemoveAll(getFsPath("Coord"))
-	err := CreateCoord(c, "TestWorld", testCoord)
-	if err != nil {
-		fmt.Println(err)
-		t.Error("Failed to create coord")
-	}
+	createCoordHelper(t, c, "TestWorld", testCoord)
 	coords, err := GetCoords(c, "TestWorld")
 	if err != nil {
 		fmt.Println(err)
@@ -107,11 +105,7 @@ func TestUpdateCoord(t *testing.T) {
 	c := connector.New(getFsPath("Coord"))
 	defer c.Close()
 	defer os.RemoveAll(getFsPath("Coord"))
-	err := CreateCoord(c, "TestWorld", testCoord)
-	if err != nil {
-		fmt.Println(err)
-		t.Error("Failed to create coord")
-	}
+	createCoordHelper(t, c, "TestWorld", testCoord)
 	coords, err := GetCoords(c, "TestWorld")
 	if err != nil {
 		fmt.Println(err)
@@ -138,11 +132,7 @@ func TestDeleteCoord(t *testing.T) {
 	c := connector.New(getFsPath("Coord"))
 	defer c.Close()
 	defer os.RemoveAll(getFsPath("Coord"))
-	err := CreateCoord(c, "TestWorld", testCoord)
-	if err != nil {
-		fmt.Println(err)
-		t.Error("Failed to create cord")
-	}
+	createCoordHelper(t, c, "TestWorld", testCoord)
 	coords, err := GetCoords(c, "TestWorld")
 	if err != nil {
 		fmt.Println(err)
