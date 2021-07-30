@@ -133,3 +133,33 @@ func TestUpdateCoord(t *testing.T) {
 		t.Error("Updated description does not match")
 	}
 }
+
+func TestDeleteCoord(t *testing.T) {
+	c := connector.New(getFsPath("Coord"))
+	defer c.Close()
+	defer os.RemoveAll(getFsPath("Coord"))
+	err := CreateCoord(c, "TestWorld", testCoord)
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to create cord")
+	}
+	coords, err := GetCoords(c, "TestWorld")
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to get coords")
+	}
+	err = DeleteCoord(c, "TestWorld", *coords[0].ID)
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to delete coord")
+	}
+	coords, err = GetCoords(c, "TestWorld")
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to get coords")
+	}
+	if len(coords) != 0 {
+		t.Error("Coord failed to delete")
+	}
+
+}

@@ -19,6 +19,7 @@ var Routes []server.Route = []server.Route{
 	{Method: "POST", Path: "/world/:world/coord", Handler: CreateCoordHandler},
 	{Method: "GET", Path: "/world/:world/coord/:coordId", Handler: GetCoordHandler},
 	{Method: "PUT", Path: "/world/:world/coord/:coordId", Handler: UpdateCoordHandler},
+	{Method: "DELETE", Path: "/world/:world/coord/:coordId", Handler: DeleteCoordHandler},
 }
 
 func CreateWorldHandler(w http.ResponseWriter, r *http.Request, p server.PathParams) {
@@ -130,6 +131,24 @@ func UpdateCoordHandler(w http.ResponseWriter, r *http.Request, p server.PathPar
 	}
 	err = coord.UpdateCoord(c, p["world"], coordId, coordData)
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func DeleteCoordHandler(w http.ResponseWriter, r *http.Request, p server.PathParams) {
+	c := connector.GetConnector()
+	coordId, err := strconv.Atoi(p["coordId"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	err = coord.DeleteCoord(c, p["world"], coordId)
+	if err != nil {
+		if _, ok := err.(*coord.CoordNotExistError); ok {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

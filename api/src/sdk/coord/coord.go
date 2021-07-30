@@ -188,6 +188,24 @@ func UpdateCoord(c *hare.Database, world string, coordId int, coord Coord) error
 	return &CoordNotExistError{coordId}
 }
 
+func DeleteCoord(c *hare.Database, world string, coordId int) error {
+	err := createTableIfNotExists(c)
+	if err != nil {
+		return err
+	}
+	ids, err := c.IDs(table)
+	if err != nil {
+		return err
+	}
+	for _, id := range ids {
+		if id == coordId {
+			c.Delete(table, id)
+			return nil
+		}
+	}
+	return &CoordNotExistError{coordId}
+}
+
 func coordRecordToCoord(r CoordRecord) Coord {
 	return Coord{
 		ID:          &r.ID,
