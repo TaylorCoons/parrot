@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"parrot/api/src/connector"
 	"parrot/api/src/routes"
 	"parrot/api/src/server"
+	"parrot/api/src/util"
 	"path/filepath"
 )
 
@@ -24,7 +26,9 @@ func startServer() {
 	c := connector.New(fsPath)
 	defer c.Close()
 	connector.SetConnector(c)
-	err = http.ListenAndServe(":8080", server)
+	port := util.GetPort()
+	bind := fmt.Sprintf(":%d", port)
+	err = http.ListenAndServe(bind, server)
 	if err != nil {
 		panic(err)
 	}
