@@ -21,3 +21,13 @@ The webapp allows user to view and add coordinates from a web interface.
 ### API
 -----
 The backend api is responsible for storing the coordinates. The api provides a REST interface to allow data transactions from the front end web application and minecraft plugin. The supported operations are documented in the [open api specification](api/openapi.yml) file
+
+**Build and run**
+
+In _api/src_
+
+`go run index.go`
+
+**Port**
+
+The default port is set to `8080`
