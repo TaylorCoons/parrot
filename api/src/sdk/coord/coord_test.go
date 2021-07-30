@@ -17,6 +17,8 @@ var testRealm = Overworld
 var testStructure = DesertTemple
 var testBiome = Desert
 var testDescription = "Test Coordinate"
+var testWorld = "TestWorld"
+var testDBPath = "Coord"
 
 var testCoord Coord = Coord{
 	X:           &testX,
@@ -55,7 +57,7 @@ func TestCreateTableIfNotExists(t *testing.T) {
 }
 
 func createCoordHelper(t *testing.T, c *hare.Database, worldName string, coord Coord) {
-	err := CreateCoord(c, "TestWorld", testCoord)
+	err := CreateCoord(c, testWorld, testCoord)
 	if err != nil {
 		fmt.Println(err)
 		t.Error("Failed to create coord")
@@ -97,55 +99,55 @@ func deleteCoordHelper(t *testing.T, c *hare.Database, worldName string, coordId
 }
 
 func TestCreateCoord(t *testing.T) {
-	c := connector.New(getFsPath("Coord"))
+	c := connector.New(getFsPath(testDBPath))
 	defer c.Close()
-	defer os.RemoveAll(getFsPath("Coord"))
-	createCoordHelper(t, c, "TestWorld", testCoord)
+	defer os.RemoveAll(getFsPath(testDBPath))
+	createCoordHelper(t, c, testWorld, testCoord)
 }
 
 func TestGetCoords(t *testing.T) {
-	c := connector.New(getFsPath("Coord"))
+	c := connector.New(getFsPath(testDBPath))
 	defer c.Close()
-	defer os.RemoveAll(getFsPath("Coord"))
-	createCoordHelper(t, c, "TestWorld", testCoord)
-	coords := getCoordsHelper(t, c, "TestWorld")
+	defer os.RemoveAll(getFsPath(testDBPath))
+	createCoordHelper(t, c, testWorld, testCoord)
+	coords := getCoordsHelper(t, c, testWorld)
 	if len(coords) != 1 {
 		t.Error("Length of coords does not match")
 	}
 }
 
 func TestGetCoord(t *testing.T) {
-	c := connector.New(getFsPath("Coord"))
+	c := connector.New(getFsPath(testDBPath))
 	defer c.Close()
-	defer os.RemoveAll(getFsPath("Coord"))
-	createCoordHelper(t, c, "TestWorld", testCoord)
-	coords := getCoordsHelper(t, c, "TestWorld")
-	getCoordHelper(t, c, "TestWorld", *coords[0].ID)
+	defer os.RemoveAll(getFsPath(testDBPath))
+	createCoordHelper(t, c, testWorld, testCoord)
+	coords := getCoordsHelper(t, c, testWorld)
+	getCoordHelper(t, c, testWorld, *coords[0].ID)
 }
 
 func TestUpdateCoord(t *testing.T) {
-	c := connector.New(getFsPath("Coord"))
+	c := connector.New(getFsPath(testDBPath))
 	defer c.Close()
-	defer os.RemoveAll(getFsPath("Coord"))
-	createCoordHelper(t, c, "TestWorld", testCoord)
-	coords := getCoordsHelper(t, c, "TestWorld")
+	defer os.RemoveAll(getFsPath(testDBPath))
+	createCoordHelper(t, c, testWorld, testCoord)
+	coords := getCoordsHelper(t, c, testWorld)
 	updateDescription := "I have been updated"
 	coords[0].Description = &updateDescription
-	updateCoordHelper(t, c, "TestWorld", *coords[0].ID, coords[0])
-	coord := getCoordHelper(t, c, "TestWorld", *coords[0].ID)
+	updateCoordHelper(t, c, testWorld, *coords[0].ID, coords[0])
+	coord := getCoordHelper(t, c, testWorld, *coords[0].ID)
 	if *coord.Description != updateDescription {
 		t.Error("Updated description does not match")
 	}
 }
 
 func TestDeleteCoord(t *testing.T) {
-	c := connector.New(getFsPath("Coord"))
+	c := connector.New(getFsPath(testDBPath))
 	defer c.Close()
-	defer os.RemoveAll(getFsPath("Coord"))
-	createCoordHelper(t, c, "TestWorld", testCoord)
-	coords := getCoordsHelper(t, c, "TestWorld")
-	deleteCoordHelper(t, c, "TestWorld", *coords[0].ID)
-	coords = getCoordsHelper(t, c, "TestWorld")
+	defer os.RemoveAll(getFsPath(testDBPath))
+	createCoordHelper(t, c, testWorld, testCoord)
+	coords := getCoordsHelper(t, c, testWorld)
+	deleteCoordHelper(t, c, testWorld, *coords[0].ID)
+	coords = getCoordsHelper(t, c, testWorld)
 	if len(coords) != 0 {
 		t.Error("Coord failed to delete")
 	}
