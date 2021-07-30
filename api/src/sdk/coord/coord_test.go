@@ -62,6 +62,15 @@ func createCoordHelper(t *testing.T, c *hare.Database, worldName string, coord C
 	}
 }
 
+func getCoordsHelper(t *testing.T, c *hare.Database, worldName string) []Coord {
+	coords, err := GetCoords(c, worldName)
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to get coords")
+	}
+	return coords
+}
+
 func TestCreateCoord(t *testing.T) {
 	c := connector.New(getFsPath("Coord"))
 	defer c.Close()
@@ -74,11 +83,7 @@ func TestGetCoords(t *testing.T) {
 	defer c.Close()
 	defer os.RemoveAll(getFsPath("Coord"))
 	createCoordHelper(t, c, "TestWorld", testCoord)
-	coords, err := GetCoords(c, "TestWorld")
-	if err != nil {
-		fmt.Println(err)
-		t.Error("Failed to get coords")
-	}
+	coords := getCoordsHelper(t, c, "TestWorld")
 	if len(coords) != 1 {
 		t.Error("Length of coords does not match")
 	}
@@ -89,12 +94,8 @@ func TestGetCoord(t *testing.T) {
 	defer c.Close()
 	defer os.RemoveAll(getFsPath("Coord"))
 	createCoordHelper(t, c, "TestWorld", testCoord)
-	coords, err := GetCoords(c, "TestWorld")
-	if err != nil {
-		fmt.Println(err)
-		t.Error("Failed to get coords")
-	}
-	_, err = GetCoord(c, "TestWorld", *coords[0].ID)
+	coords := getCoordsHelper(t, c, "TestWorld")
+	_, err := GetCoord(c, "TestWorld", *coords[0].ID)
 	if err != nil {
 		fmt.Println(err)
 		t.Error("Failed to get coord")
@@ -106,14 +107,10 @@ func TestUpdateCoord(t *testing.T) {
 	defer c.Close()
 	defer os.RemoveAll(getFsPath("Coord"))
 	createCoordHelper(t, c, "TestWorld", testCoord)
-	coords, err := GetCoords(c, "TestWorld")
-	if err != nil {
-		fmt.Println(err)
-		t.Error("Failed to get coords")
-	}
+	coords := getCoordsHelper(t, c, "TestWorld")
 	updateDescription := "I have been updated"
 	coords[0].Description = &updateDescription
-	err = UpdateCoord(c, "TestWorld", *coords[0].ID, coords[0])
+	err := UpdateCoord(c, "TestWorld", *coords[0].ID, coords[0])
 	if err != nil {
 		fmt.Println(err)
 		t.Error("Failed to update coord")
@@ -133,12 +130,8 @@ func TestDeleteCoord(t *testing.T) {
 	defer c.Close()
 	defer os.RemoveAll(getFsPath("Coord"))
 	createCoordHelper(t, c, "TestWorld", testCoord)
-	coords, err := GetCoords(c, "TestWorld")
-	if err != nil {
-		fmt.Println(err)
-		t.Error("Failed to get coords")
-	}
-	err = DeleteCoord(c, "TestWorld", *coords[0].ID)
+	coords := getCoordsHelper(t, c, "TestWorld")
+	err := DeleteCoord(c, "TestWorld", *coords[0].ID)
 	if err != nil {
 		fmt.Println(err)
 		t.Error("Failed to delete coord")
