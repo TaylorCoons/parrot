@@ -88,6 +88,14 @@ func updateCoordHelper(t *testing.T, c *hare.Database, worldName string, coordId
 	}
 }
 
+func deleteCoordHelper(t *testing.T, c *hare.Database, worldName string, coordId int) {
+	err := DeleteCoord(c, worldName, coordId)
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to delete coord")
+	}
+}
+
 func TestCreateCoord(t *testing.T) {
 	c := connector.New(getFsPath("Coord"))
 	defer c.Close()
@@ -136,18 +144,9 @@ func TestDeleteCoord(t *testing.T) {
 	defer os.RemoveAll(getFsPath("Coord"))
 	createCoordHelper(t, c, "TestWorld", testCoord)
 	coords := getCoordsHelper(t, c, "TestWorld")
-	err := DeleteCoord(c, "TestWorld", *coords[0].ID)
-	if err != nil {
-		fmt.Println(err)
-		t.Error("Failed to delete coord")
-	}
-	coords, err = GetCoords(c, "TestWorld")
-	if err != nil {
-		fmt.Println(err)
-		t.Error("Failed to get coords")
-	}
+	deleteCoordHelper(t, c, "TestWorld", *coords[0].ID)
+	coords = getCoordsHelper(t, c, "TestWorld")
 	if len(coords) != 0 {
 		t.Error("Coord failed to delete")
 	}
-
 }
