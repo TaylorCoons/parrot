@@ -80,6 +80,14 @@ func getCoordHelper(t *testing.T, c *hare.Database, worldName string, coordId in
 	return coord
 }
 
+func updateCoordHelper(t *testing.T, c *hare.Database, worldName string, coordId int, coord Coord) {
+	err := UpdateCoord(c, worldName, coordId, coord)
+	if err != nil {
+		fmt.Println(err)
+		t.Error("Failed to update coord")
+	}
+}
+
 func TestCreateCoord(t *testing.T) {
 	c := connector.New(getFsPath("Coord"))
 	defer c.Close()
@@ -115,11 +123,7 @@ func TestUpdateCoord(t *testing.T) {
 	coords := getCoordsHelper(t, c, "TestWorld")
 	updateDescription := "I have been updated"
 	coords[0].Description = &updateDescription
-	err := UpdateCoord(c, "TestWorld", *coords[0].ID, coords[0])
-	if err != nil {
-		fmt.Println(err)
-		t.Error("Failed to update coord")
-	}
+	updateCoordHelper(t, c, "TestWorld", *coords[0].ID, coords[0])
 	coord := getCoordHelper(t, c, "TestWorld", *coords[0].ID)
 	if *coord.Description != updateDescription {
 		t.Error("Updated description does not match")
