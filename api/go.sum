@@ -1,2 +1,4 @@
+github.com/TaylorCoons/gorouter v0.0.0-20211109021408-60d481eaea98 h1:/vr0RHUfrFxwi8Bp81gZs+Ob+OnLPfvz/Vaz42B+JEM=
+github.com/TaylorCoons/gorouter v0.0.0-20211109021408-60d481eaea98/go.mod h1:jXjJSb5x6SsEOCtYNnaeW1WXAhNWvIZo1N6P+6p0jqY=
 github.com/jameycribbs/hare v0.6.0 h1:jvDZ/ZhYAKzo4nPgryUviEcoNwnkGNbnJ4WyVyf1zck=
 github.com/jameycribbs/hare v0.6.0/go.mod h1:pO8GwHOqBVd352oemfxOnJn4m1xRKKUrQ5Cn1VLjM34=

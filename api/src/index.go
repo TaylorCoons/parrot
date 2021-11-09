@@ -6,9 +6,10 @@ import (
 	"os"
 	"parrot/api/src/connector"
 	"parrot/api/src/routes"
-	"parrot/api/src/server"
 	"parrot/api/src/util"
 	"path/filepath"
+
+	server "github.com/TaylorCoons/gorouter"
 )
 
 func main() {
@@ -28,6 +29,7 @@ func startServer() {
 	connector.SetConnector(c)
 	port := util.GetPort()
 	bind := fmt.Sprintf(":%d", port)
+	fmt.Println("Parrot is listening")
 	err = http.ListenAndServe(bind, server)
 	if err != nil {
 		panic(err)

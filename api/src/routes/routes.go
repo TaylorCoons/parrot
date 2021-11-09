@@ -6,8 +6,9 @@ import (
 	"parrot/api/src/connector"
 	"parrot/api/src/sdk/coord"
 	"parrot/api/src/sdk/world"
-	"parrot/api/src/server"
 	"strconv"
+
+	server "github.com/TaylorCoons/gorouter"
 )
 
 var Routes []server.Route = []server.Route{
